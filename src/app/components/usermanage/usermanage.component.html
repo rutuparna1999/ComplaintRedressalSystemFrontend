@@ -1,0 +1,128 @@
+<app-common></app-common>
+<h1>Manage User</h1>
+    
+<button class="btn btn-dark" (click)="open(userAddEditModal)">Add User</button>
+    
+<ng-template #userAddEditModal let-modal>
+  <form #userfrom = "ngForm" (ngSubmit) = "saveeuser()">
+    <input type="text" class="form-control" id="id" name="id" [(ngModel)]="Useradddata.id"/>
+  <div class="modal-header">
+    <!-- <input type="hidden" [value]="Useradddata.id"/> -->
+    <h4 class="modal-title" id="useraddEditid" *ngIf="Useradddata.id != ''">Edit User Modal</h4>
+    <h4 class="modal-title" id="useraddEditid" *ngIf="Useradddata.id == ''">Add User Modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter Full Name" [(ngModel)]="Useradddata.fullname"  required #fullname="ngModel" >
+        <div *ngIf = "fullname.touched|| userfrom.submitted  && fullname.errors" class="text-danger">
+          <p *ngIf = "fullname.errors && fullname.errors['required']">Fullname is required</p>
+      </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" [(ngModel)]="Useradddata.email" required #email="ngModel" email>
+        <div *ngIf = "email.touched|| userfrom.submitted && email.errors" class="text-danger">
+          <p *ngIf = "email.errors && email.errors['required']">Email is required</p>
+          <p *ngIf = "email.errors && email.errors['email']">Please give correct email </p>
+          
+      </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" class="form-control" id="password" name="password" placeholder="Enter Password" [(ngModel)]="Useradddata.password" required #password="ngModel" minlength="6">
+        <div *ngIf = "password.touched|| userfrom.submitted && password.errors" class="text-danger">
+          <p *ngIf = "password.errors && password.errors['required']">Password is required</p>
+          <p *ngIf = "password.errors && password.errors['minlength']">Password should be 6 characters long</p>
+          
+      </div>
+      </div>
+      <div class="form-group">
+        <label for="usertype">Select Usertype</label>
+
+        <select class="form-control" id="usertype" name="usertype" [(ngModel)]="Useradddata.usertype.utid" [disabled]="isDisabled" required #usertype="ngModel" >
+          <option>Choose Usertype</option>
+            <option *ngFor="let allUserTypes of allUserTypes; " value="{{allUserTypes.utid}}"  [selected]="Useradddata.usertype.utid == allUserTypes.utid" >{{allUserTypes.roleName}}</option>
+          
+        </select>
+        <div *ngIf = "usertype.touched|| userfrom.submitted && usertype.errors" class="text-danger">
+          <p *ngIf = "usertype.errors && usertype.errors['required']">Usertype is required</p>
+      </div>
+      </div>
+      <div class="form-group">
+        <label for="pincode">Pincode</label>
+        <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode" [(ngModel)]="Useradddata.pincode"  required #pincode="ngModel" pattern="[0-9]{6}">
+
+        <div *ngIf = "pincode.touched|| userfrom.submitted && pincode.errors" class="text-danger">
+          <p *ngIf = "pincode.errors && pincode.errors['required']">Pincode is required</p>
+          <p *ngIf = "pincode.errors && pincode.errors['pattern']">Please give correct Pincode</p>
+      </div>
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea class="form-control" id="address"  name="address" rows="3" [(ngModel)]="Useradddata.address"  required #address="ngModel"></textarea>
+        <div *ngIf = "address.touched|| userfrom.submitted && address.errors" class="text-danger">
+          <p *ngIf = "address.errors && address.errors['required']">Address is required</p>
+         
+      </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    
+    <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+    <button type="submit" class="btn btn-primary"  *ngIf="Useradddata.id != ''">Update</button>
+    <button type="submit" class="btn btn-primary"   *ngIf="Useradddata.id == ''" [disabled] = "userfrom.invalid">Save</button>
+  </div>
+</form>
+</ng-template>
+<ng-template #userdeleteModal let-modal>
+  <form>
+    <input type="hidden" class="form-control" id="id" name="id" [(ngModel)]="Useradddata.id"/>
+  <div class="modal-header">
+    <h4 class="modal-title" id="userdeletebyid">delete Modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h1>Are You sure want to delete this Record</h1>
+  </div>
+  <div class="modal-footer">
+    
+    <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+    <button type="submit" class="btn btn-danger"  (click)="deleteuserbyid()">Delete</button>
+  </div>
+</form>
+</ng-template>
+<div>
+<table class="table table-responsive">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Fullname</th>
+        <th scope="col">Email</th>
+        <th scope="col">Usertype</th>
+        <th scope="col">Pincode</th>
+        <th scope="col">Address</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let users of allusers;">
+        <th>{{users.id}}</th>
+        <td>{{users.fullname}}</td>
+        <td>{{users.email}}</td>
+        <td>{{users.usertype.roleName}}</td>
+        <td>{{users.pincode}}</td>
+        <td>{{users.address}}</td>
+        <td><button type="button" class="btn btn-secondary" (click)="showuser(users.id,userAddEditModal)">Edit</button>&nbsp;
+          <button type="button" class="btn btn-danger" (click)="deleteusermodelopen(users.id,userdeleteModal)">Delete</button></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+ 

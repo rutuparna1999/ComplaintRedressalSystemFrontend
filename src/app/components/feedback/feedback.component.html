@@ -1,0 +1,22 @@
+<app-common></app-common>
+<h4>All Feedbacks</h4>
+<div >
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Complains</th>
+            <th scope="col">Feedback</th>
+            <th scope="col">Given By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feddback of allfeedbacks;">
+            <th>{{feddback.fid}}</th>
+            <td>{{feddback.cid.complaindetail}}</td>
+            <td>{{feddback.feedback}}</td>
+            <td>{{feddback.givenby.fullname}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>

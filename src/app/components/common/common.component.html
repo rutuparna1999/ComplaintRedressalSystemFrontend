@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark " >
+  
+    <ul class="navbar-nav">
+        <li class="nav-item"><a routerLink="/dashboard" class="nav-link">Dashboard</a></li>
+        <li *ngIf="sessionroleid ==1 || sessionroleid ==2 || sessionroleid ==4" class="nav-item"><a routerLink="/complain" class="nav-link">Complain</a></li>
+        <li  *ngIf="sessionroleid ==1 || sessionroleid ==2" class="nav-item" ><a routerLink="/Feedback" class="nav-link">Feedback</a></li>
+        <li  *ngIf="sessionroleid ==1" class="nav-item" ><a routerLink="/usermanage" class="nav-link">Manage User</a></li>
+        <li  *ngIf="sessionroleid ==3 " class="nav-item" ><a routerLink="/Engineers" class="nav-link">Assigned Complain</a></li>
+       
+        <li class="nav-item" >
+             <button
+               class="btn btn-light" (click)="logout()">logout</button>
+            
+        </li>
+        
+    </ul>
+    <ul class="navbar-nav last">
+        <li class="nav-item " *ngIf="sessionuid!=null">
+            <h4 style="color: white;">{{sessionfullname}}</h4>
+            
+           </li>
+    </ul>
+</nav>

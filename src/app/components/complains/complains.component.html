@@ -1,0 +1,241 @@
+<app-common></app-common>
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" style="padding: 10px;">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>One</a>
+        <ng-template ngbNavContent>
+          <button class="btn btn-dark" (click)="opentoadd(addcomplain)" *ngIf="sessionroleid ==4 ">Create Complain</button>
+          <button class="btn btn-dark" (click)="opentoassign(assigncomplain)" *ngIf="sessionroleid ==2">Assign Complain</button>
+          <ng-template #assigncomplain let-modal>
+            <form #assigncomplin = "ngForm" (ngSubmit) = "saveeassignto()">
+            <div class="modal-header">
+              <h4 class="modal-title" id="assigncomplain">Assign Complain  Modal</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+               
+                <label for="complaindetail">Complains</label>
+                <select class="form-control" id="complaindetail" name="complaindetail" [(ngModel)]="complainstatusdata.cid" (change)='onSelectChange($event)' required #complaindetail="ngModel">
+                  <option>Choose Complains</option>
+                    <option *ngFor="let newComplainsall of allnewComplainsforall; " value="{{newComplainsall.cid}}`{{newComplainsall.pincode}}"  >{{newComplainsall.complaindetail}}</option>
+                  
+                </select>
+                <div *ngIf = "complaindetail.touched|| assigncomplin.submitted  && complaindetail.errors" class="text-danger">
+                  <p *ngIf = "complaindetail.errors && complaindetail.errors['required']">Complain is required</p>
+              </div>
+              </div>
+              <div class="form-group">
+               
+                <label for="assignto">Assignto</label>
+                <select class="form-control" id="assignto" name="assignto" [(ngModel)]="complainstatusdata.assignto.id" required #assignto="ngModel">
+                  <option>Choose Engineer</option>
+                    <option *ngFor="let engineers of allengineers; " value="{{engineers.id}}"  >{{engineers.fullname}}[{{engineers.email}}]</option>
+                  
+                </select>
+                <div *ngIf = "assignto.touched|| assigncomplin.submitted  && assignto.errors" class="text-danger">
+                  <p *ngIf = "assignto.errors && assignto.errors['required']">Assignto is required</p>
+              </div>
+              </div>
+              <div class="form-group">
+              <input type="hidden" class="form-control" id="cid" name="cid"  [(ngModel)]="complainstatusdata.csid" >
+              <input type="hidden" class="form-control" id="createdby" name="createdby"   [(ngModel)]="complainstatusdata.assignedby.id">
+            </div>
+              <div class="form-group">
+                <label for="">Remark</label>
+                <input type="remark" class="form-control" id="remark" name="remark" placeholder="Remark"  [(ngModel)]="complainstatusdata.remark" required #remark="ngModel">
+                <div *ngIf = "remark.touched|| assigncomplin.submitted  && remark.errors" class="text-danger">
+                  <p *ngIf = "remark.errors && remark.errors['required']">Remark is required</p>
+              </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              
+              <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled] = "assigncomplin.invalid">Assign</button>
+            </div>
+          </form>
+          </ng-template>   
+          <ng-template #addcomplain let-modal>
+            <form  #addcomplain = "ngForm" (ngSubmit) = "saveecomplain()">
+            <div class="modal-header">
+              <h4 class="modal-title" id="addcomplain">Create Complain Modal</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <input type="hidden" class="form-control" id="cid" name="cid"  [(ngModel)]="complaindata.cid" >
+                  <input type="hidden" class="form-control" id="createdby" name="createdby"   [(ngModel)]="complaindata.createdby.id">
+                  <label for="pincode">Pincode</label>
+                 
+                  <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode"  [(ngModel)]="complaindata.pincode" required #pincode="ngModel" pattern="[0-9]{6}">
+                  <div *ngIf = "pincode.touched|| addcomplain.submitted && pincode.errors" class="text-danger">
+                    <p *ngIf = "pincode.errors && pincode.errors['required']">Pincode is required</p>
+                    <p *ngIf = "pincode.errors && pincode.errors['pattern']">Please give correct Pincode</p>
+                </div>
+                </div>
+                <div class="form-group">
+                  <label for="complaindetail">Complain Detail</label>
+                  <input type="text" class="form-control" id="complaindetail" name="complaindetail" placeholder="Enter Your Complain"  [(ngModel)]="complaindata.complaindetail" required #complaindetail="ngModel">
+                  <div *ngIf = "complaindetail.touched || addcomplain.submitted  && complaindetail.errors" class="text-danger">
+                    <p *ngIf = "complaindetail.errors && complaindetail.errors['required']">Complain Detail is required</p>
+                </div>
+                </div>
+                <div class="form-group">
+                  <label for="">Description</label>
+                  <input type="remark" class="form-control" id="remark" name="remark" placeholder="Description"  [(ngModel)]="complaindata.remark" required #remark="ngModel">
+                  <div *ngIf = "remark.touched || addcomplain.submitted  && remark.errors" class="text-danger">
+                    <p *ngIf = "remark.errors && remark.errors['required']">Remark is required</p>
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              
+              <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled] = "addcomplain.invalid">Save</button>
+            </div>
+          </form>
+          </ng-template>
+
+        
+          <div *ngIf="sessionroleid ==2 || sessionroleid ==1">
+          <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Complains</th>
+                  <th scope="col">Pincode</th>
+                  <th scope="col">Remark</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Created By</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let newComplainsall of allnewComplainsforall;">
+                  <th>{{newComplainsall.cid}}</th>
+                  <td>{{newComplainsall.complaindetail}}</td>
+                  <td>{{newComplainsall.pincode}}</td>
+                  <td>{{newComplainsall.remark}}</td>
+                  <td>{{newComplainsall.status}}</td>
+                  <td>{{newComplainsall.createdby.fullname}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="sessionroleid ==4">
+            <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Complains</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Remark</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Created By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr >
+                    <tr *ngFor="let newComplainsuser of allnewComplainsforuser;">
+                      <th>{{newComplainsuser.cid}}</th>
+                      <td>{{newComplainsuser.complaindetail}}</td>
+                      <td>{{newComplainsuser.pincode}}</td>
+                      <td>{{newComplainsuser.remark}}</td>
+                      <td>{{newComplainsuser.status}}</td>
+                      <td>{{newComplainsuser.createdby.fullname}}</td>
+                    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>Two</a>
+        <ng-template ngbNavContent>
+          <ng-template #feedbackmodal let-modal>
+            <form #feedbackfrom = "ngForm" (ngSubmit) = "saveefeedback()">
+            <div class="modal-header">
+              <h4 class="modal-title" id="feedbackmodal">Give Feedback Modal</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <input type="hidden" class="form-control" id="cid" name="cid"  [(ngModel)]="feedbackdata.fid" >
+                </div>
+                <div class="form-group">
+                  <label for="feedback">Feedback</label>
+                  <input type="text" class="form-control" id="feedback" name="feedback" placeholder="Enter Feedback"  [(ngModel)]="feedbackdata.feedback" required #feedback="ngModel">
+                  <div *ngIf = "feedback.touched|| feedbackfrom.submitted  && feedback.errors" class="text-danger">
+                    <p *ngIf = "feedback.errors && feedback.errors['required']">Feedback is required</p>
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              
+              <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled] = "feedbackfrom.invalid">Save</button>
+            </div>
+          </form>
+          </ng-template>
+          <div *ngIf="sessionroleid ==2 || sessionroleid ==1">
+            <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Complains</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Assignto</th>
+                    <th scope="col">AssignBy</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let allcstatusall of allComplainswithstatusforall;">
+                    <th>{{allcstatusall.csid}}</th>
+                    <td>{{allcstatusall.cid.complaindetail}}</td>
+                    <td>{{allcstatusall.cid.pincode}}</td>
+                    <td>{{allcstatusall.assignto.fullname}}</td>
+                    <td>{{allcstatusall.assignedby.fullname}}</td>
+                    <td>{{allcstatusall.status}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="sessionroleid ==4">
+              <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Complains</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">Created By</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let allrecombyuser of allresolvedcombyuser;">
+                      <th>{{allrecombyuser.cid}}</th>
+                      <td>{{allrecombyuser.complaindetail}}</td>
+                      <td>{{allrecombyuser.pincode}}</td>
+                      <td>{{allrecombyuser.createdby.fullname}}</td>
+                      <td>{{allrecombyuser.status}}</td>
+                      <td><button *ngIf="allrecombyuser.status != 'CLOSED'" type="button" class="btn btn-secondary" (click)="givefeedback(allrecombyuser.cid,feedbackmodal)">Give Feedback</button><button *ngIf="allrecombyuser.status == 'CLOSED'" type="button" class="btn btn-secondary">CLOSED</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+       
+        </ng-template>
+      </li>
+    
+    </ul>
+    
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    

@@ -1,0 +1,42 @@
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form #loginform = "ngForm"  (ngSubmit)="submit()">
+          <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+            <p class="lead fw-normal mb-0 me-3">Login in to Complaint Redressal System</p>
+          </div>
+
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="email">Email address</label>
+            <input type="text" id="email" class="form-control" name="email" placeholder="Enter Email" [(ngModel)]="userLogin.email" required #email="ngModel" email>
+          <div *ngIf = "email.touched|| loginform.submitted && email.errors" class="text-danger">
+            <p *ngIf = "email.errors && email.errors['required']">Email is required</p>
+            <p *ngIf = "email.errors && email.errors['email']">Please give correct email </p>
+            
+        </div>
+          </div>
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" class="form-control" name="password" placeholder="Enter Password" [(ngModel)]="userLogin.password" required #password="ngModel">
+          <div *ngIf = "password.touched|| loginform.submitted && password.errors" class="text-danger">
+            <p *ngIf = "password.errors && password.errors['required']">Password is required</p>
+            
+        </div>
+          </div>
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg"
+              style="padding-left: 2.5rem; padding-right: 2.5rem;" [disabled] = "loginform.invalid">Login</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

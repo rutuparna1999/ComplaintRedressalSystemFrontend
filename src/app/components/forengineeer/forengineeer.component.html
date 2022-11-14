@@ -1,0 +1,132 @@
+<app-common></app-common>
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" style="padding: 10px;">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>One</a>
+        <ng-template ngbNavContent>
+        
+          <ng-template #updatestatusmodel let-modal>
+            <form #updatestatus = "ngForm" (ngSubmit) = "updatestatussave()">
+            <div class="modal-header">
+              <h4 class="modal-title" id="assigncomplain">Complain Status Update  Modal</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="status">Select Status</label>
+            
+                    <select class="form-control" id="status" name="status" [(ngModel)]="complainstatusdata.status" required #status="ngModel">
+                      <option>Choose Status</option>
+                        <option  value="PROCESSED">PROCESSED</option>
+                        <option  value="RESOLVED">RESOLVED</option>
+                    </select>
+
+                    <div *ngIf = "status.touched|| updatestatus.submitted  && status.errors" class="text-danger">
+                      <p *ngIf = "status.errors && status.errors['required']">Status is required</p>
+                  </div>
+                  </div>
+            </div>
+            <div class="modal-footer">
+              
+              <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled] = "updatestatus.invalid">Save</button>
+            </div>
+          </form>
+          </ng-template>   
+       
+          <div>
+            <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Complains</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Remark</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr >
+                    <tr *ngFor="let newComplainsuser of allComplainsengineers;">
+                      <th>{{newComplainsuser.csid}}</th>
+                      <td>{{newComplainsuser.cid.complaindetail}}</td>
+                      <td>{{newComplainsuser.cid.pincode}}</td>
+                      <td>{{newComplainsuser.remark}}</td>
+                      <td>{{newComplainsuser.status}}</td>
+                      <td>{{newComplainsuser.cid.createdby.fullname}}</td>
+                    <td><button type="button" class="btn btn-secondary" (click)="updatestatus(newComplainsuser.csid,newComplainsuser.cid.cid,updatestatusmodel)">Update Status</button></td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2" >
+        <a ngbNavLink>Two</a>
+        <ng-template ngbNavContent>
+          <ng-template #viewfeedbackmodal let-modal>
+            <form >
+              <div class="modal-header">
+              <h4 class="modal-title" id="viewfeedbackmodal">View Feedback</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div *ngIf="legnthoffeedback==0">
+                <p><strong>No Feedback Given Yet.</strong></p>
+              </div>
+             <div *ngFor="let feedback of allfeedbackbycid;">
+              <h6>{{feedback.cid.complaindetail}}</h6>
+              <p ><strong>Feedback:{{feedback.feedback}}</strong></p>
+              <p>Given By: {{feedback.givenby.fullname}}</p>
+              <p>Role Type:{{feedback.usertype.roleName}}</p>
+             </div>
+            </div>
+            <div class="modal-footer">
+              
+              <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Close</button>
+          
+            </div>
+          </form>
+          </ng-template>
+            <div >
+              <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Complains</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">Assignto</th>
+                      <th scope="col">AssignBy</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <tr *ngFor="let resolvedComplains of allComplainsreengineers;">
+                            <th>{{resolvedComplains.csid}}</th>
+                            <td>{{resolvedComplains.cid.complaindetail}}</td>
+                            <td>{{resolvedComplains.cid.pincode}}</td>
+                            <td>{{resolvedComplains.assignto.fullname}}</td>
+                            <td>{{resolvedComplains.assignedby.fullname}}</td>
+                            <td>{{resolvedComplains.status}}</td>
+                          <td><button *ngIf="resolvedComplains.status == 'RESOLVED' " type="button" class="btn btn-secondary" (click)="updatestatusclose(resolvedComplains.csid,resolvedComplains.cid.cid)">Close</button>&nbsp;
+                            <button *ngIf="resolvedComplains.status == 'CLOSED' " type="button" disable="disabled" class="btn btn-secondary">CLOSED</button>&nbsp;
+                            <button *ngIf="resolvedComplains.status == 'RESOLVED' || resolvedComplains.status == 'CLOSED'" type="button" class="btn btn-secondary" (click)="viewfeedback(resolvedComplains.cid.cid,viewfeedbackmodal)">View feedback</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+       
+        </ng-template>
+      </li>
+    
+    </ul>
+    
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    

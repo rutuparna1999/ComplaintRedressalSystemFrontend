@@ -1,0 +1,13 @@
+<section id="hero" class="d-flex align-items-center justify-content-center">
+  <div class="container" data-aos="fade-up">
+
+    <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+      <div class="col-xl-6 col-lg-8">
+        <h1>ABC Telecom Ltd.<span>.</span></h1>
+        <h3 class="textcolour">One of India’s major telecommunication service providers offering landline, mobile phone and Fiber optic broadband services across the country.</h3>
+        <a  routerLink="/login" *ngIf="sessionuid == null "><button class="btn btn-light">Login</button></a>
+        <a  routerLink="/dashboard" *ngIf="sessionuid != null "><button class="btn btn-light" >Go dashboard {{sessionfullname}}</button></a>
+      </div>
+    </div>
+  </div>
+</section>
